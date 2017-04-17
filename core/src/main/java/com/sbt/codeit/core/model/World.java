@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sbt.codeit.core.control.ServerListener;
 import com.sbt.codeit.core.util.FieldHelper;
 import com.sbt.codeit.core.util.IdHelper;
+import com.sbt.codeit.core.util.GameLogHelper;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -17,10 +18,12 @@ import static com.sbt.codeit.core.util.FieldHelper.FIELD_WIDTH;
  */
 public class World implements TankExplodeListener {
 
-    private final static int HEARTBEAT_DELAY = 100;
+    private final static int HEARTBEAT_DELAY = 30;
     private final ConcurrentHashMap<ServerListener, Tank> tanks = new ConcurrentHashMap<>();
     private final ArrayList<ArrayList<Character>> field = FieldHelper.loadField();
     private final Random random = new Random();
+    private Tank winner;
+    private GameLogHelper logHelper = new GameLogHelper();
 
     private int currentColor;
     private int heartBeats = 0;
@@ -37,7 +40,7 @@ public class World implements TankExplodeListener {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if(heartBeats % 2 == 0) {
+                if (heartBeats % 2 == 0) {
                     updateTanks();
                 }
                 updateBullets();
@@ -49,6 +52,22 @@ public class World implements TankExplodeListener {
     public void addTank(ServerListener listener, String name) {
         Tank tank = createRandomTank(name);
         tanks.put(listener, tank);
+        if (tanks.keySet().size() > 1) {
+            Tank[] tanksArray = tanks.values().toArray(new Tank[2]);
+            logHelper.setFirst(tanksArray[0]);
+            logHelper.setSecond(tanksArray[1]);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (getWinner() == null) {
+                        logHelper.writeTimeoutWinner();
+                        System.exit(-1);
+                    }
+                }
+            }, HEARTBEAT_DELAY * 20 * 60 * 2);
+            logHelper.write(String.format("Two tanks were initiated: '%s' and '%s'",
+                    logHelper.getFirst().getName(), logHelper.getSecond().getName()));
+        }
     }
 
     private Tank createRandomTank(String name) {
@@ -72,23 +91,22 @@ public class World implements TankExplodeListener {
                 continue;
             }
             tank.update(field);
-            if(heartBeats % 20 == 0) {
+            if (heartBeats % 20 == 0) {
                 tank.enableFire();
                 heartBeats = 0;
             }
-            synchronized (this) {
-                for (int i = 0; i < Tank.SIZE; i++) {
-                    for (int j = 0; j < Tank.SIZE; j++) {
-                        FieldHelper.clearCell(field, tank.getPreviousX() + j, tank.getPreviousY() + i);
-                    }
+            for (int i = 0; i < Tank.SIZE; i++) {
+                for (int j = 0; j < Tank.SIZE; j++) {
+                    FieldHelper.clearCell(field, tank.getPreviousX() + j, tank.getPreviousY() + i);
                 }
-                for (int i = 0; i < Tank.SIZE; i++) {
-                    for (int j = 0; j < Tank.SIZE; j++) {
-                        FieldHelper.addTankToCell(field, tank.getId(), tank.getX() + j, tank.getY() + i);
-                    }
+            }
+            for (int i = 0; i < Tank.SIZE; i++) {
+                for (int j = 0; j < Tank.SIZE; j++) {
+                    FieldHelper.addTankToCell(field, tank.getId(), tank.getX() + j, tank.getY() + i);
                 }
             }
         }
+        logHelper.writeField(field);
         notifyListeners();
     }
 
@@ -125,6 +143,15 @@ public class World implements TankExplodeListener {
         }
         tank.moveTo(createRandomPosition());
         owner.incrementHits();
+        logHelper.write("Tank " + owner.getName() + " hit tank " + tank.getName());
+
+        if (owner.getHits() >= 3) {
+            winner = owner;
+            logHelper.write("Tank " + owner.getName() + " wins.");
+            logHelper.writeWinner(winner, tank);
+            System.out.println("Game stopped with winner");
+            System.exit(-1);
+        }
     }
 
     private Tank getTankById(Character character) {
@@ -159,4 +186,7 @@ public class World implements TankExplodeListener {
         return new Vector2(x, y);
     }
 
+    public Tank getWinner() {
+        return winner;
+    }
 }
