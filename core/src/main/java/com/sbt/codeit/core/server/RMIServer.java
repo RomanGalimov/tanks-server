@@ -1,6 +1,7 @@
 package com.sbt.codeit.core.server;
 
 import com.sbt.codeit.core.control.GameController;
+import com.sbt.codeit.core.control.ServerListener;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -13,8 +14,6 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class RMIServer {
 
-    private static final int PORT = 2017;
-    private static final String STUB_NAME = "GameController";
     private GameController controller;
 
     public RMIServer(GameController controller) {
@@ -24,8 +23,8 @@ public class RMIServer {
     public void start() {
         try {
             GameController stub = (GameController) UnicastRemoteObject.exportObject(controller, 0);
-            Registry registry = LocateRegistry.createRegistry(PORT);
-            registry.bind(STUB_NAME, stub);
+            Registry registry = LocateRegistry.createRegistry(ServerListener.PORT);
+            registry.bind(ServerListener.STUB_NAME, stub);
         } catch (RemoteException | AlreadyBoundException e) {
             e.printStackTrace();
         }

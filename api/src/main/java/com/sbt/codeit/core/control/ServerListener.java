@@ -9,6 +9,10 @@ import java.util.ArrayList;
  */
 public interface ServerListener extends Remote {
 
+    public String HOST = "localhost";
+    public int PORT = 2017;
+    public String STUB_NAME = "GameController";
+
     void update(ArrayList<ArrayList<Character>> field) throws RemoteException;
 
 }

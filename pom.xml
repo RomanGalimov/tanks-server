@@ -82,6 +82,7 @@
 	<modules>
 		<module>core</module>
 		<module>desktop</module>
+		<module>api</module>
 	</modules>
 
 </project>
