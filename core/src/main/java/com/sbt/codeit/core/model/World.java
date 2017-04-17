@@ -19,6 +19,7 @@ import static com.sbt.codeit.core.util.FieldHelper.FIELD_WIDTH;
 public class World implements TankExplodeListener {
 
     private final static int HEARTBEAT_DELAY = 30;
+    private final static int TIMEOUT= 1000*60*1;
     private final ConcurrentHashMap<ServerListener, Tank> tanks = new ConcurrentHashMap<>();
     private final ArrayList<ArrayList<Character>> field = FieldHelper.loadField();
     private final Random random = new Random();
@@ -64,8 +65,8 @@ public class World implements TankExplodeListener {
                         System.exit(-1);
                     }
                 }
-            }, HEARTBEAT_DELAY * 20 * 60 * 2);
-            logHelper.write(String.format("Two tanks were initiated: '%s' and '%s'",
+            }, TIMEOUT);
+            logHelper.write(String.format("Two tanks were initiated: '%1$s' and '%2$s'",
                     logHelper.getFirst().getName(), logHelper.getSecond().getName()));
         }
     }

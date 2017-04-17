@@ -70,19 +70,19 @@ public class GameLogHelper {
 
     public void writeTimeoutWinner() {
         if(first.getHits() > second.getHits()){
-            write(String.format("Game stopped by timeout. Winner is '%s' (%s hits) over '%s' (%s hits)",
+            write(String.format("Game stopped by timeout. Winner is '%1$s' (%2$s hits) over '%3$s' (%4$s hits)",
                     first.getName(), first.getHits(),
                     second.getName(), second.getHits()));
             writeWinner(first, second);
         }
         if(first.getHits() < second.getHits()){
-            write(String.format("Game stopped by timeout. Winner is '%s' (%s hits) over '%s' (%s hits)",
+            write(String.format("Game stopped by timeout. Winner is '%1$s' (%2$s hits) over '%3$s' (%4$s hits)",
                     second.getName(), second.getHits(),
                     first.getName(), first.getHits()));
             writeWinner(second, first);
         }
         if(first.getHits() == second.getHits()){
-            write(String.format("No winner. Dead heat between '%s' (%s hits) and '%s' (%s hits)",
+            write(String.format("No winner. Dead heat between '%1$s' (%2$s hits) and '%3$s' (%4$s hits)",
                     first.getName(), first.getHits(),
                     second.getName(), second.getHits()));
             writeDeadHeat(first);
