@@ -14,7 +14,7 @@ public class ResultCreator {
         List<Path> bots = Files.walk(Paths.get("work/"))
                 .filter(path -> path.getFileName().toString().endsWith(".jar") && !path.getFileName().toString().equals("server.jar"))
                 .collect(Collectors.toList());
-        bots.forEach(bot -> bots.subList(bots.indexOf(bot) + 1, bots.size()).forEach(enemy -> System.out.println(bot + " " + enemy)));
+        bots.forEach(bot -> bots.subList(bots.indexOf(bot) + 1, bots.size()).forEach(enemy -> game(bot, enemy)));
         writeResult();
     }
 
