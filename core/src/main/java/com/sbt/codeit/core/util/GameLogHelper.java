@@ -2,10 +2,8 @@ package com.sbt.codeit.core.util;
 
 import com.sbt.codeit.core.model.Tank;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,16 @@ public class GameLogHelper {
     private Tank first;
     private Tank second;
     private PrintWriter writer;
-    private static String path = "winners.txt";
+    private final static String path = "winners.txt";
+    private final String battlesDir = "battles/";
+
+    public GameLogHelper() {
+        try {
+            Files.createDirectory(Paths.get(battlesDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setFirst(Tank first) {
         this.first = first;
@@ -39,7 +46,7 @@ public class GameLogHelper {
     public void write(String text) {
         try {
             if (first != null && second != null) {
-                OutputStream outputStream = new FileOutputStream(getFirst().getName() + "_" + getSecond().getName() + ".txt", true);
+                OutputStream outputStream = new FileOutputStream(battlesDir + getFirst().getName() + "_" + getSecond().getName() + ".txt", true);
                 writer = new PrintWriter(outputStream, true);
                 writer.println(text);
             }
