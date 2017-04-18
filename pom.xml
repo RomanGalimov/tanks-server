@@ -83,6 +83,7 @@
 		<module>core</module>
 		<module>desktop</module>
 		<module>api</module>
+		<module>result-creator</module>
 	</modules>
 
 </project>

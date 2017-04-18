@@ -3,8 +3,8 @@ package com.sbt.codeit.core.model;
 import com.badlogic.gdx.math.Vector2;
 import com.sbt.codeit.core.control.ServerListener;
 import com.sbt.codeit.core.util.FieldHelper;
-import com.sbt.codeit.core.util.IdHelper;
 import com.sbt.codeit.core.util.GameLogHelper;
+import com.sbt.codeit.core.util.IdHelper;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -19,7 +19,7 @@ import static com.sbt.codeit.core.util.FieldHelper.FIELD_WIDTH;
 public class World implements TankExplodeListener {
 
     private final static int HEARTBEAT_DELAY = 30;
-    private final static int TIMEOUT= 1000*60*1;
+    private final static int TIMEOUT = 1000 * 60 * 1;
     private final ConcurrentHashMap<ServerListener, Tank> tanks = new ConcurrentHashMap<>();
     private final ArrayList<ArrayList<Character>> field = FieldHelper.loadField();
     private final Random random = new Random();
@@ -73,7 +73,7 @@ public class World implements TankExplodeListener {
 
     private Tank createRandomTank(String name) {
         Tank tank = new Tank(this, IdHelper.getId(name), name, currentColor, random.nextInt(3));
-        tank.moveTo(createRandomPosition());
+        tank.moveTo(getPosition());
         currentColor = currentColor < 2 ? currentColor + 1 : 0;
         return tank;
     }
@@ -142,7 +142,7 @@ public class World implements TankExplodeListener {
                 FieldHelper.clearCell(field, tank.getX() + j, tank.getY() + i);
             }
         }
-        tank.moveTo(createRandomPosition());
+        tank.moveTo(getPosition());
         owner.incrementHits();
         logHelper.write("Tank " + owner.getName() + " hit tank " + tank.getName());
 
@@ -164,27 +164,11 @@ public class World implements TankExplodeListener {
         throw new IllegalArgumentException();
     }
 
-    private Vector2 createRandomPosition() {
-        int x;
-        int y;
-        switch (random.nextInt(4)) {
-            case 0:
-                x = 0;
-                y = 0;
-                break;
-            case 1:
-                x = FIELD_WIDTH - Tank.SIZE;
-                y = 0;
-                break;
-            case 2:
-                x = 0;
-                y = FIELD_HEIGHT - Tank.SIZE;
-                break;
-            default:
-                x = FIELD_WIDTH - Tank.SIZE;
-                y = FIELD_HEIGHT - Tank.SIZE;
+    private Vector2 getPosition() {
+        if (getTanks().size() == 0) {
+            return new Vector2(0, 0);
         }
-        return new Vector2(x, y);
+        return new Vector2(FIELD_WIDTH - Tank.SIZE, FIELD_HEIGHT - Tank.SIZE);
     }
 
     public Tank getWinner() {
