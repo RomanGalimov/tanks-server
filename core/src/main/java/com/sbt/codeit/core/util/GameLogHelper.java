@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sbt-selin-an on 17.04.2017.
@@ -59,18 +58,8 @@ public class GameLogHelper {
         try {
             OutputStream outputStream = new FileOutputStream(path, true);
             writer = new PrintWriter(outputStream, true);
-            writer.println(winner.getName() + "=3");
-            writer.println(looser.getName() + "=0");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeDeadHeat(Tank t) {
-        try {
-            OutputStream outputStream = new FileOutputStream(path, true);
-            writer = new PrintWriter(outputStream, true);
-            writer.println(t.getName() + "=1");
+            writer.println(winner.getName() + "=" + winner.getHits());
+            writer.println(looser.getName() + "=" + looser.getHits());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -87,21 +76,20 @@ public class GameLogHelper {
             write(String.format("Game stopped by timeout. Winner is '%1$s' (%2$s hits) over '%3$s' (%4$s hits)",
                     second.getName(), second.getHits(),
                     first.getName(), first.getHits()));
-            writeWinner(second, first);
+            writeWinner(first, second);
         }
         if(first.getHits() == second.getHits()){
-            write(String.format("No winner. Dead heat between '%1$s' (%2$s hits) and '%3$s' (%4$s hits)",
+            write(String.format("Game stopped by timeout. Dead heat between '%1$s' (%2$s hits) and '%3$s' (%4$s hits)",
                     first.getName(), first.getHits(),
                     second.getName(), second.getHits()));
-            writeDeadHeat(first);
-            writeDeadHeat(second);
+            writeWinner(first, second);
         }
     }
 
     public void writeField(ArrayList<ArrayList<Character>> field) {
-        for (List l : field){
-            write(l.toString());
-        }
-        write("=============================================================================");
+        StringBuilder stringBuilder = new StringBuilder();
+        field.forEach(line -> {line.forEach(stringBuilder::append); stringBuilder.append("\r\n");});
+        stringBuilder.append("=============================================================================");
+        write(stringBuilder.toString());
     }
 }
