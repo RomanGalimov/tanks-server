@@ -10,9 +10,7 @@ public class IdHelper {
 
     private final static HashMap<String, Character> cache = new HashMap<>();
     private final static Random random = new Random();
-    private final static char[] ids = ("ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz" +
-            "" +
-            "1234567890").toCharArray();
+    private final static char[] ids = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890").toCharArray();
 
     public static Character getId(String name) {
         Character id = cache.get(name);

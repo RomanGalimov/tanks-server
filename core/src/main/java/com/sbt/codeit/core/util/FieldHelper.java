@@ -37,7 +37,7 @@ public class FieldHelper {
 
     public static boolean isEmpty(ArrayList<ArrayList<Character>> field, float x, float y) {
         Character character = field.get((int) y).get((int) x);
-        return character.equals(' ') || character.equals('x');
+        return character.equals(' ') || character.equals('*');
     }
 
     public static boolean isWall(ArrayList<ArrayList<Character>> field, float x, float y) {
@@ -47,7 +47,7 @@ public class FieldHelper {
 
     public static boolean isBullet(ArrayList<ArrayList<Character>> field, float x, float y) {
         Character character = field.get((int) y).get((int) x);
-        return character.equals('x');
+        return character.equals('*');
     }
 
     public static boolean isTank(ArrayList<ArrayList<Character>> field, float x, float y) {
@@ -63,7 +63,7 @@ public class FieldHelper {
     }
 
     public static void addBulletToCell(ArrayList<ArrayList<Character>> field, float x, float y) {
-        field.get((int)y).set((int)x, 'x');
+        field.get((int)y).set((int)x, '*');
     }
 
 }
