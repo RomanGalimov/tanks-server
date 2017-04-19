@@ -21,11 +21,11 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    public void register(ServerListener serverListener, String name) throws RemoteException {
+    public Character register(ServerListener serverListener, String name) throws RemoteException {
         if(!name.matches("[A-ZА-Я][A-z 1-9]*")) {
             throw new RemoteException("В регистрации отказано: некорректное имя.");
         }
-        world.addTank(serverListener, name);
+        return world.addTank(serverListener, name);
     }
 
     @Override

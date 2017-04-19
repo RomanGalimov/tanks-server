@@ -50,26 +50,28 @@ public class World implements TankExplodeListener {
         }, 0, HEARTBEAT_DELAY);
     }
 
-    public void addTank(ServerListener listener, String name) {
+    public Character addTank(ServerListener listener, String name) {
         synchronized (tanks) {
             Tank tank = createRandomTank(name);
             tanks.put(listener, tank);
-        }
-        if (tanks.keySet().size() > 1) {
-            Tank[] tanksArray = tanks.values().toArray(new Tank[2]);
-            logHelper.setFirst(tanksArray[0]);
-            logHelper.setSecond(tanksArray[1]);
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (getWinner() == null) {
-                        logHelper.writeTimeoutWinner();
-                        System.exit(-1);
+
+            if (tanks.keySet().size() > 1) {
+                Tank[] tanksArray = tanks.values().toArray(new Tank[2]);
+                logHelper.setFirst(tanksArray[0]);
+                logHelper.setSecond(tanksArray[1]);
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (getWinner() == null) {
+                            logHelper.writeTimeoutWinner();
+                            System.exit(-1);
+                        }
                     }
-                }
-            }, TIMEOUT);
-            logHelper.write(String.format("Two tanks were initiated: '%1$s' and '%2$s'",
-                    logHelper.getFirst().getName(), logHelper.getSecond().getName()));
+                }, TIMEOUT);
+                logHelper.write(String.format("Two tanks were initiated: '%1$s' and '%2$s'",
+                        logHelper.getFirst().getName(), logHelper.getSecond().getName()));
+            }
+            return tank.getId();
         }
     }
 
