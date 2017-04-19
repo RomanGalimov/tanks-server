@@ -51,8 +51,10 @@ public class World implements TankExplodeListener {
     }
 
     public void addTank(ServerListener listener, String name) {
-        Tank tank = createRandomTank(name);
-        tanks.put(listener, tank);
+        synchronized (tanks) {
+            Tank tank = createRandomTank(name);
+            tanks.put(listener, tank);
+        }
         if (tanks.keySet().size() > 1) {
             Tank[] tanksArray = tanks.values().toArray(new Tank[2]);
             logHelper.setFirst(tanksArray[0]);
