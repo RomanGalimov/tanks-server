@@ -4,6 +4,7 @@ import com.sbt.codeit.core.model.Tank;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -20,7 +21,10 @@ public class GameLogHelper {
 
     public GameLogHelper() {
         try {
-            Files.createDirectory(Paths.get(battlesDir));
+            Path battlesDir = Paths.get(this.battlesDir);
+            if(!battlesDir.toFile().exists()) {
+                Files.createDirectory(battlesDir);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

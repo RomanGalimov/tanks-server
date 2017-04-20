@@ -35,21 +35,20 @@ public class Drawer {
         this.world = world;
         camera = new OrthographicCamera();
         camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         wall = new Texture(Gdx.files.internal("brick.jpg"));
         bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
         gray = new Texture(Gdx.files.internal("gray.png"));
         tanks = TextureRegion.split(new Texture(Gdx.files.internal("tanks.png")), 60, 80);
         batch = new SpriteBatch();
+        batch.setProjectionMatrix(camera.combined);
         cellSize = Gdx.graphics.getHeight() / (float) FieldHelper.FIELD_HEIGHT;
         rightEdgeOfField = FieldHelper.FIELD_WIDTH * cellSize;
 
     }
 
     public void draw() {
-        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawMap();
         drawTanks();
