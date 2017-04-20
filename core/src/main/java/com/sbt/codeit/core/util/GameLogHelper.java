@@ -19,17 +19,6 @@ public class GameLogHelper {
     private final static String path = "winners.txt";
     private final String battlesDir = "battles/";
 
-    public GameLogHelper() {
-        try {
-            Path battlesDir = Paths.get(this.battlesDir);
-            if(!battlesDir.toFile().exists()) {
-                Files.createDirectory(battlesDir);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setFirst(Tank first) {
         this.first = first;
     }
@@ -49,11 +38,15 @@ public class GameLogHelper {
     public void write(String text) {
         try {
             if (first != null && second != null) {
+                Path dir = Paths.get(this.battlesDir);
+                if(!dir.toFile().exists()) {
+                    Files.createDirectory(dir);
+                }
                 OutputStream outputStream = new FileOutputStream(battlesDir + getFirst().getName() + "_" + getSecond().getName() + ".txt", true);
                 writer = new PrintWriter(outputStream, true);
                 writer.println(text);
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
