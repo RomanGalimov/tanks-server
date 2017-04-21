@@ -68,8 +68,8 @@ public class World implements TankExplodeListener {
                         }
                     }
                 }, TIMEOUT);
-                logHelper.write(String.format("Two tanks were initiated: '%1$s' and '%2$s'",
-                        logHelper.getFirst().getName(), logHelper.getSecond().getName()));
+                logHelper.write(String.format("Two tanks were initiated: '%1$s' (%2$s) and '%3$s' (%4$s)",
+                        logHelper.getFirst().getName(), logHelper.getFirst().getId(), logHelper.getSecond().getName(), logHelper.getSecond().getId()));
             }
             return tank.getId();
         }
