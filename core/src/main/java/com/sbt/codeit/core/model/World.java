@@ -110,20 +110,6 @@ public class World implements TankExplodeListener {
                     FieldHelper.addTankToCell(field, tank.getId(), tank.getX() + j, tank.getY() + i);
                 }
             }
-            switch (tank.getDirection()) {
-                case UP:
-                    FieldHelper.addTankToCell(field, '+', tank.getX() + Tank.SIZE / 2, tank.getY());
-                    break;
-                case DOWN:
-                    FieldHelper.addTankToCell(field, '+', tank.getX() + Tank.SIZE / 2, tank.getY() + Tank.SIZE - 1);
-                    break;
-                case LEFT:
-                    FieldHelper.addTankToCell(field, '+', tank.getX(), tank.getY() + Tank.SIZE / 2);
-                    break;
-                case RIGHT:
-                    FieldHelper.addTankToCell(field, '+', tank.getX() + Tank.SIZE - 1, tank.getY() + Tank.SIZE / 2);
-                    break;
-            }
         }
         logHelper.writeField(field);
         notifyListeners();
